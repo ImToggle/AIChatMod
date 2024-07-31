@@ -10,8 +10,15 @@ class ModCommand {
 
     @Main
     fun toggle() {
-        AIChatMod.chatting = !AIChatMod.chatting
-        UChat.chat("Ai chat is now ${if (AIChatMod.chatting) "on" else "off"}.")
+        chatting = !chatting
+        initChat()
+        if (chatting) sendMessage("hello")
+        UChat.chat("Ai chat is now ${if (chatting) "on" else "off"}.")
+    }
+
+    @SubCommand
+    fun reset() {
+        resetAll()
     }
 
     @SubCommand

@@ -21,8 +21,22 @@ object ModConfig : Config(Mod(AIChatMod.NAME, ModType.UTIL_QOL), "${AIChatMod.MO
         get() = field.coerceIn(0f..2f)
 
     @Text(
+        name = "Message Style",
+        description = "Customize message style. Example: <%name%> %message%"
+    )
+    var style = "<%name%> %message%"
+
+    @Button(
+        name = "Style",
+        text = "Reset"
+    )
+    var resetStyle = Runnable {
+        style = "<%name%> %message%"
+    }
+
+    @Text(
         name = "API Key",
-        description = "paste your Groq API key here.",
+        description = "Paste your Groq API key here.",
         secure = true
     )
     var apiKey = ""
@@ -41,7 +55,7 @@ object ModConfig : Config(Mod(AIChatMod.NAME, ModType.UTIL_QOL), "${AIChatMod.MO
 
     @Button(
         name = "",
-        text = "Update",
+        text = "Update Skin",
         size = 2
     )
     var updateSkin = Runnable {
@@ -62,7 +76,7 @@ object ModConfig : Config(Mod(AIChatMod.NAME, ModType.UTIL_QOL), "${AIChatMod.MO
     )
     var browse = Runnable {
         runAsync {
-            AIChatMod.browsePrompt()
+            browsePrompt()
         }
     }
 
@@ -70,6 +84,7 @@ object ModConfig : Config(Mod(AIChatMod.NAME, ModType.UTIL_QOL), "${AIChatMod.MO
 
     init {
         initialize()
+        initChat()
         updateSkin()
         addListener("displayName") {
             addInfo()
