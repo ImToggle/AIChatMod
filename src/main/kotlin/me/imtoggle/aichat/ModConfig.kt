@@ -9,26 +9,36 @@ object ModConfig : Config(Mod(AIChatMod.NAME, ModType.UTIL_QOL), "${AIChatMod.MO
 
     @Dropdown(
         name = "Model",
-        options = ["Llama 3.1 70B (Preview)", "Llama 3.1 8B (Preview)", "Llama 3 Groq 70B Tool Use (Preview)", "Llama 3 Groq 8B Tool Use (Preview)", "Meta Llama 3 70B", "Meta Llama 3 8B", "Mixtral 8x7B", "Gemma 7B", "Gemma 2 9B"]
+        options = ["Llama 3.1 70B (Preview)", "Llama 3.1 8B (Preview)", "Llama 3 Groq 70B Tool Use (Preview)", "Llama 3 Groq 8B Tool Use (Preview)", "Meta Llama 3 70B", "Meta Llama 3 8B", "Mixtral 8x7B", "Gemma 7B", "Gemma 2 9B"],
+        subcategory = "Main"
     )
     var modelType = 4
 
+    @Switch(
+        name = "Public Chat",
+        subcategory = "Main"
+    )
+    var publicChat = false
+
     @Slider(
         name = "Temperature",
-        min = 0f, max = 2f
+        min = 0f, max = 2f,
+        subcategory = "Main"
     )
     var temperature = 1f
         get() = field.coerceIn(0f..2f)
 
     @Text(
         name = "Message Style",
-        description = "Customize message style. Example: <%name%> %message%"
+        description = "Customize message style. Example: <%name%> %message%",
+        subcategory = "Main"
     )
     var style = "<%name%> %message%"
 
     @Button(
         name = "Style",
-        text = "Reset"
+        text = "Reset",
+        subcategory = "Main"
     )
     var resetStyle = Runnable {
         style = "<%name%> %message%"
@@ -37,26 +47,35 @@ object ModConfig : Config(Mod(AIChatMod.NAME, ModType.UTIL_QOL), "${AIChatMod.MO
     @Text(
         name = "API Key",
         description = "Paste your Groq API key here.",
-        secure = true
+        secure = true,
+        subcategory = "Main"
     )
     var apiKey = ""
 
     @Text(
         name = "Display Name",
-        size = 2
+        size = 2,
+        subcategory = "Bot Customization"
     )
     var displayName = "AI"
 
     @Text(
         name = "Skin URL",
-        size = 2
+        size = 2,
+        subcategory = "Bot Customization"
     )
     var skinURL = ""
+
+    @Switch(
+        name = "Show In Tab",
+        subcategory = "Bot Customization"
+    )
+    var showInTab = false
 
     @Button(
         name = "",
         text = "Update Skin",
-        size = 2
+        subcategory = "Bot Customization"
     )
     var updateSkin = Runnable {
         runAsync {
@@ -66,13 +85,15 @@ object ModConfig : Config(Mod(AIChatMod.NAME, ModType.UTIL_QOL), "${AIChatMod.MO
 
     @Dropdown(
         name = "Game Type",
-        options = ["Survival", "Creative", "Adventure", "Spectator"]
+        options = ["Survival", "Creative", "Adventure", "Spectator"],
+        subcategory = "Bot Customization"
     )
     var gameType = 3
 
     @Button(
         name = "Prompt",
-        text = "Browse"
+        text = "Browse",
+        subcategory = "Bot Customization"
     )
     var browse = Runnable {
         runAsync {
@@ -86,6 +107,13 @@ object ModConfig : Config(Mod(AIChatMod.NAME, ModType.UTIL_QOL), "${AIChatMod.MO
         initialize()
         initChat()
         updateSkin()
+        addListener("showInTab") {
+            if (showInTab) {
+                addInfo()
+            } else {
+                removeInfo()
+            }
+        }
         addListener("displayName") {
             addInfo()
         }

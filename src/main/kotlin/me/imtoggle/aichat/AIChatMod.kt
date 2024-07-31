@@ -26,6 +26,8 @@ object AIChatMod {
         EventManager.INSTANCE.register(this)
     }
 
+    var sendTime = System.currentTimeMillis() //some servers have message sending cooldown
+
     var chatHistory = ArrayList<MessageInfo>()
 
     var image: BufferedImage? = null
@@ -33,10 +35,24 @@ object AIChatMod {
     @Subscribe
     fun onSend(event: ChatSendEvent) {
         if (!chatting) return
+        if (ModConfig.publicChat){
+            if (event.message.startsWith(".chat ")) {
+                sendTime = System.currentTimeMillis() + 2000
+            }
+            return
+        }
         if (event.message.startsWith("/")) return
         event.isCancelled = true
         UChat.chat(getMessage(mc.thePlayer.name, event.message))
         sendMessage(event.message)
+    }
+
+    @Subscribe
+    fun onReceive(event: ChatEvent) {
+        if (!chatting) return
+        if (!ModConfig.publicChat) return
+        if (!event.text.contains(".chat ")) return
+        sendMessage(event.text.replace(".chat ", ""))
     }
 
     @Subscribe
