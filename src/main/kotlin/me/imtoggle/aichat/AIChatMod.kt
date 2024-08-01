@@ -60,6 +60,7 @@ object AIChatMod {
         if (event.stage != Stage.END) return
         image ?: return
         skinTexture = DynamicTexture(image)
+        image = null
         skinTexture.updateDynamicTexture()
         skinLocation = mc.textureManager.getDynamicTextureLocation("aichatmod", skinTexture)
     }
